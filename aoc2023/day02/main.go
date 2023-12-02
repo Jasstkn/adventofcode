@@ -36,23 +36,26 @@ func main() {
 	}
 
 	sum := 0
-	blueprint := Turn{
-		Red:   12,
-		Green: 13,
-		Blue:  14,
-	}
 	for g := range games {
-		allTurnsMeetCondition := true
+		minBlueprint := Turn{
+			Red:   0,
+			Green: 0,
+			Blue:  0,
+		}
+		power := 0
 		for _, t := range games[g].Turns {
-			if t.Red > blueprint.Red || t.Green > blueprint.Green || t.Blue > blueprint.Blue {
-				allTurnsMeetCondition = false
-				break
+			if t.Red > minBlueprint.Red {
+				minBlueprint.Red = t.Red
+			}
+			if t.Green > minBlueprint.Green{
+				minBlueprint.Green = t.Green
+			}
+			if t.Blue > minBlueprint.Blue{
+				minBlueprint.Blue = t.Blue
 			}
 		}
-
-		if allTurnsMeetCondition {
-			sum += games[g].ID
-		}
+		power = minBlueprint.Red * minBlueprint.Green * minBlueprint.Blue
+		sum += power
 	}
 	fmt.Println(sum)
 }
