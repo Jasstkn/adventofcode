@@ -14,13 +14,16 @@ func main() {
 	}
 
 	floor := 0
-	for _, ch := range f {
+	for i, ch := range f {
 		if ch == '(' {
 			floor++
 		} else if ch == ')' {
 			floor--
 		}
-		
+		if floor == -1 {
+			fmt.Println("Basement at position", i+1)
+			break
+		}
 	}
 	fmt.Println(floor)
 }
