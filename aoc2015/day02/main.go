@@ -30,21 +30,28 @@ func calculateWrappingPaper(input string) int {
 	l, _ := strconv.Atoi(lStr)
 	w, _ := strconv.Atoi(wStr)
 	h, _ := strconv.Atoi(hStr)
-	a := l * w
-	b := w * h
-	c := h * l
 
-	return 2*a + 2*b + 2*c + findMin(a, b, c)
+	return l*w*h + findPerimeter(find2Min(l, w, h))
 }
 
-func findMin(a, b, c int) int {
+func findPerimeter(a, b int) int {
+	return 2*a + 2*b
+}
+
+func find2Min(a, b, c int) (int, int) {
 	if a <= b && a <= c {
+		return a, findMin(b, c)
+	} else if b <= a && b <= c {
+		return b, findMin(a, c)
+	}
+	return c, findMin(a, b)
+}
+
+func findMin(a, b int) int {
+	if a < b {
 		return a
 	}
-	if b <= a && b <= c {
-		return b
-	}
-	return c
+	return b
 }
 
 func readLinesFromFile(filename string) ([]string, error) {
