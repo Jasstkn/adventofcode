@@ -3,36 +3,50 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
 	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	f, _ := os.Open("input_example.txt")
+	f, _ := os.Open("input.txt")
 	defer f.Close()
 
-	var points float64
+	sets := map[int]int{}
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		parts := strings.Split(scanner.Text(), ":")
-		cardN := strings.TrimSpace(parts[0])
+
+		cardStr := strings.TrimSpace(strings.Replace(parts[0], "Card", "", -1))
 
 		numersPart := strings.Split(parts[1], "|")
 		winningCards, myCards := strings.Fields(numersPart[0]), strings.Fields(numersPart[1])
-		fmt.Printf("Card number: %s, winning cards: %s, myCards: %s \n", cardN, winningCards, myCards)
 
-		cnt := 0
-		for _, card := range myCards {
-			if isWinningCard(card, winningCards) {
-				cnt++
+		wins := 0
+		for _, c := range myCards {
+			if isWinningCard(c, winningCards) {
+				wins++
 			}
 		}
+		card, _ := strconv.Atoi(cardStr)
 
-		if cnt > 0 {
-			fmt.Println("card: ", cardN, ",adding points: ", math.Pow(2, float64(cnt-1)))
-			points += math.Pow(2, float64(cnt-1))
+		if _, ok := sets[card]; ok {
+			for i := 0; i <= sets[card]; i++ {
+				for i := card + 1; i <= card+wins; i++ {
+					sets[i] += 1
+				}
+			}
+			sets[card] += 1
+		} else {
+			for i := card; i <= card+wins; i++ {
+				sets[i] += 1
+			}
 		}
+	}
+
+	points := 0
+	for _, v := range sets {
+		points += v
 	}
 
 	fmt.Println("total points: ", points)
